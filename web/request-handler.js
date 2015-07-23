@@ -2,6 +2,7 @@ var path = require('path');
 var archive = require('../helpers/archive-helpers');
 var httpHelpers = require('./http-helpers');
 var fs = require('fs');
+var urlParser = require('url');
 // require more modules/folders here!
 
 exports.handleRequest = function (req, res) {
@@ -31,11 +32,16 @@ var actions = {
   },
 
   POST: function(req, res) {
-    fs.appendFile('../archives/sites.txt', req.url, function(err) {
-      if (err) {
-        throw err;
-      }
-      console.log('data appended');
+    var raw = req;
+    req.on('data', function(chunk) {
+      console.log(typeof chunk.toString());
+      fs.appendFile('./archives/sites.txt', chunk.toString() + '\n', function(err) {
+        if (err) {
+          return err;
+        }
+        res.writeHeader(302, headers);
+        res.end();
+      });
     });
   },
   OPTIONS: function(req, res) {}

@@ -28,7 +28,7 @@ exports.initialize = function(pathsObj){
 
 exports.readListOfUrls = function(){
   var listUrl = [];
-  fs.readFile(exports.paths.list, function(err, contents) {
+  fs.readFile(paths.list, function(err, contents) {
     if (err) {
       throw err;
     } else {
