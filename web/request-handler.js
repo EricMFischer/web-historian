@@ -20,20 +20,33 @@ var actions = {
     // in all cases, results eventually need to be read
     if (req.url === '/') {
       getContents(res, archive.paths.index);
-    } else if (archive.isUrlInList(req.url)) {
-      getContents(res, archive.paths.archivedSites + '/' + req.url) 
+    } else {
+      getContents(res, archive.paths.archivedSites + '/' + req.url);
     }
+
+    // else if (archive.isUrlInList(req.url)) {
+      // getContents(res, archive.paths.archivedSites + '/' + req.url) 
+    // }
 
   },
 
-  POST: function(req, res) {},
+  POST: function(req, res) {
+    fs.appendFile('../archives/sites.txt', req.url, function(err) {
+      if (err) {
+        throw err;
+      }
+      console.log('data appended');
+    });
+  },
   OPTIONS: function(req, res) {}
 };
 
 var getContents = function(res, file) {
   fs.readFile(file, function(err, contents) {
     if (err) {
-      throw err;
+      res.writeHeader(404, headers);
+      res.end('404: Page not found');
+      // throw err;
     } else {  
       res.writeHeader(200, headers);
       /*do something with read content*/
