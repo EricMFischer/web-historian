@@ -10,6 +10,7 @@ var _ = require('underscore');
  */
 
 exports.paths = {
+  index: path.join(__dirname, '../web/public/index.html'),
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
@@ -26,9 +27,23 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
+  var listUrl = [];
+  fs.readFile(exports.paths.list, function(err, contents) {
+    if (err) {
+      throw err;
+    } else {
+      listUrl.push(contents.toString().split('\n'));
+      // do something that gives us access to sites
+    }
+  });
+  return listUrl;
 };
 
-exports.isUrlInList = function(){
+exports.isUrlInList = function(url){
+  // find if url exists (check the file contents)
+  // return true or false
+  var listUrl = exports.readListOfUrls();
+  return _.contains(listUrl, url);
 };
 
 exports.addUrlToList = function(){
