@@ -32,10 +32,9 @@ var actions = {
   },
 
   POST: function(req, res) {
-    var raw = req;
     req.on('data', function(chunk) {
-      console.log(typeof chunk.toString());
-      fs.appendFile('./archives/sites.txt', chunk.toString() + '\n', function(err) {
+      var url = chunk.toString().split("=")[1];
+      fs.appendFile('./archives/sites.txt', url + '\n', function(err) {
         if (err) {
           return err;
         }
@@ -43,7 +42,10 @@ var actions = {
         res.end();
       });
     });
+
+
   },
+
   OPTIONS: function(req, res) {}
 };
 

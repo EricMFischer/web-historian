@@ -27,23 +27,26 @@ exports.initialize = function(pathsObj){
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(){
-  var listUrl = [];
-  fs.readFile(paths.list, function(err, contents) {
+  var callback = function(err, contents) {
+    console.log(contents.toString());
     if (err) {
       throw err;
     } else {
-      listUrl.push(contents.toString().split('\n'));
-      // do something that gives us access to sites
+      var listUrl = [];
+      listArr = contents.toString().split('\n');
+      _.each(listArr, function(url) {
+        listUrl.push(url);
+      });
     }
-  });
-  return listUrl;
+  }
+  fs.readFile(exports.paths.list, callback);
 };
 
 exports.isUrlInList = function(url){
   // find if url exists (check the file contents)
   // return true or false
-  var listUrl = exports.readListOfUrls();
-  return _.contains(listUrl, url);
+  var urlList = exports.readListOfUrls();
+  console.log('list on 52', urlList);
 };
 
 exports.addUrlToList = function(){
