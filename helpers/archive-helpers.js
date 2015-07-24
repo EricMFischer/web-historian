@@ -26,34 +26,36 @@ exports.initialize = function(pathsObj){
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(){
-  var callback = function(err, contents) {
-    console.log(contents.toString());
+exports.readListOfUrls = function(callback){
+  fs.readFile(exports.paths.list, function(err, contents) {
     if (err) {
       throw err;
     } else {
-      var listUrl = [];
-      listArr = contents.toString().split('\n');
-      _.each(listArr, function(url) {
-        listUrl.push(url);
-      });
+      callback(contents.toString().split('\n'));
     }
-  }
-  fs.readFile(exports.paths.list, callback);
+  });
 };
 
-exports.isUrlInList = function(url){
-  // find if url exists (check the file contents)
-  // return true or false
-  var urlList = exports.readListOfUrls();
-  console.log('list on 52', urlList);
+exports.isUrlInList = function(url, callback){
+  exports.readListOfUrls(function(array) {
+    callback(url, array);
+  });
 };
 
-exports.addUrlToList = function(){
+exports.addUrlToList = function(url, callback){
+  // url and a callback--this callback has no arguments
+  exports.isUrlInList(url, function(array) {
+    if (_.indexOf(array, url) === -1) {
+      callback();
+    }
+  });
 };
 
-exports.isUrlArchived = function(){
+exports.isUrlArchived = function(url, callback){
+  fs.exists(exports.paths.archivedSites + '/' + url, function(exists) {
+    callback(exists);
+  });
 };
 
-exports.downloadUrls = function(){
+exports.downloadUrls = function(array) {
 };

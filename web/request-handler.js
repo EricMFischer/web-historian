@@ -42,8 +42,6 @@ var actions = {
         res.end();
       });
     });
-
-
   },
 
   OPTIONS: function(req, res) {}
